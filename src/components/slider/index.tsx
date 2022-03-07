@@ -5,9 +5,9 @@ import "swiper/css";
 import "swiper/css/pagination";
 import { Autoplay, Pagination, Scrollbar } from "swiper";
 
-type Banner = {
+export interface Banner {
   imageUrl: string;
-};
+}
 
 type Props = {
   bannerList: Banner[];

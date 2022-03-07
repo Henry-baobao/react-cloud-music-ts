@@ -13,3 +13,4 @@ const enhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(reducers, enhancers(applyMiddleware(thunk)));
 
 export default store;
+export type AppDispatch = typeof store.dispatch;

@@ -25,6 +25,7 @@ function RecommendList(props: Props): JSX.Element {
             <div className="img_wrapper">
               <div className="decorate"></div>
               <LazyLoad
+                once
                 placeholder={
                   <img
                     width="100%"

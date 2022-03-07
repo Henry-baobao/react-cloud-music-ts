@@ -1,36 +1,44 @@
-import React from "react";
-import Slider from "../../components/slider";
+import React, { useEffect } from "react";
+import Slider, { Banner } from "../../components/slider";
 import RecommendList, { RecommendItem } from "../../components/list";
 import { Content } from "./style";
 import { forceCheck } from "react-lazyload";
 import Scroll from "../../baseUI/scroll";
+import { connect, ConnectedProps } from "react-redux";
+import * as actions from "./store/actionCreators";
+import { RootState } from "../../store/reducer";
+import { ThunkDispatch } from "redux-thunk";
+import { Action } from "redux";
 
 type Props = {
-  bannerList: object[];
-  recommendList: object[];
+  bannerList: Banner[];
+  recommendList: RecommendItem[];
 };
 
-export default function Recommend(props: Props) {
-  const { bannerList, recommendList} = props;
-  //mock 数据
-  // const bannerList = [1, 2, 3, 4].map((item) => {
-  //   return {
-  //     imageUrl:
-  //       "http://p1.music.126.net/ZYLJ2oZn74yUz5x8NBGkVA==/109951164331219056.jpg",
-  //   };
-  // });
+const connector = connect(
+  (state: RootState): Props => {
+    console.log("root state: ", state);
+    return {
+      bannerList: state.recommend.bannerList as Banner[],
+      recommendList: state.recommend.recommendList as RecommendItem[],
+    };
+  },
+  (dispatch: ThunkDispatch<RootState, void, Action>) => ({
+    getBannerDataDispatch: () => dispatch(actions.getBannerList()),
+    getRecommendDataDispatch: () => dispatch(actions.getRecommendList()),
+  })
+);
 
-  // const recommendListJS: RecommendItem[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(
-  //   (item) => {
-  //     return {
-  //       id: item,
-  //       picUrl:
-  //         "https://p1.music.126.net/fhmefjUfMD-8qtj3JKeHbA==/18999560928537533.jpg",
-  //       playCount: 17171122,
-  //       name: "朴树、许巍、Henry-baobao",
-  //     };
-  //   }
-  // );
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+function Recommend(props: PropsFromRedux) {
+  const { bannerList, recommendList } = props;
+  const { getBannerDataDispatch, getRecommendDataDispatch } = props;
+  useEffect(() => {
+    getBannerDataDispatch();
+    getRecommendDataDispatch();
+  }, []);
+  
   return (
     <Content>
       <Scroll onScroll={forceCheck}>
@@ -42,3 +50,5 @@ export default function Recommend(props: Props) {
     </Content>
   );
 }
+
+export default connector(Recommend);

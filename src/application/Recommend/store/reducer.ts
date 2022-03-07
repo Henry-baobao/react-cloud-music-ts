@@ -1,18 +1,23 @@
-import { fromJS } from "immutable";
 import { Actions } from "./actionCreators";
 import * as actionTypes from "./constants";
 
-const defaultState = fromJS({
+export interface State {
+  bannerList: object[];
+  recommendList: object[];
+}
+
+const defaultState: State = {
   bannerList: [],
   recommendList: [],
-}).toMap();
+};
 
-const reducer = (state = defaultState, action: Actions) => {
+const reducer = (state: State = defaultState, action: Actions): State => {
+  console.log("init reducer: ", state);
   switch (action.type) {
     case actionTypes.CHANGE_BANNER:
-      return state.set("bannerList", action.data);
+      return { ...state, bannerList: action.data };
     case actionTypes.CHANGE_RECOMMEND_LIST:
-      return state.set("recommendList", action.data);
+      return { ...state, recommendList: action.data };
     default:
       return state;
   }

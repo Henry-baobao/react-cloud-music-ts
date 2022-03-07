@@ -1,4 +1,5 @@
-import { fromJS } from "immutable";
+import { AnyAction } from "redux";
+import { ThunkDispatch } from "redux-thunk";
 import {
   getBannerRequest,
   getRecommendListRequest,
@@ -15,20 +16,20 @@ export type Actions = CreateChangeBannerAction | CreateChangeRecommendAction;
 const createChangeBannerAction = (data: object[]) =>
   ({
     type: actionTypes.CHANGE_BANNER,
-    data: fromJS(data),
+    data
   } as const);
 
 const createChangeRecommendAction = (data: object[]) =>
   ({
     type: actionTypes.CHANGE_RECOMMEND_LIST,
-    data: fromJS(data),
+    data
   } as const);
 
 export const getBannerList = () => {
-  return async (dispatch) => {
+  return async (dispatch: ThunkDispatch<{}, {}, AnyAction>) => {
     try {
       const res = await getBannerRequest();
-      dispatch(createChangeBannerAction(res.data));
+      dispatch(createChangeBannerAction(res.banners));
     } catch (error) {
       console.log("轮播图数据传输错误");
     }
@@ -36,9 +37,9 @@ export const getBannerList = () => {
 };
 
 export const getRecommendList = () => {
-  return async (dispatch) => {
+  return async (dispatch: ThunkDispatch<{}, {}, AnyAction>) => {
     try {
-      const res = (await getRecommendListRequest()) as any;
+      const res = (await getRecommendListRequest());
       dispatch(createChangeRecommendAction(res.result));
     } catch (error) {
       console.log("推荐歌单数据传输错误");
