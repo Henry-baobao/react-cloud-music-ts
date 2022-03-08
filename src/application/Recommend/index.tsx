@@ -1,42 +1,37 @@
-import React from "react";
-import Slider from "../../components/slider";
+import React, { useEffect } from "react";
+import Slider, { Banner } from "../../components/slider";
 import RecommendList, { RecommendItem } from "../../components/list";
 import { Content } from "./style";
 import { forceCheck } from "react-lazyload";
 import Scroll from "../../baseUI/scroll";
+import { getBannerListAsync, getRecommendListAsync } from "./store/slice";
+import { useAppDispatch, useAppSelector } from "../../hooks";
 
-type Props = {
-  bannerList: object[];
-  recommendList: object[];
-};
+type Props = {};
 
 export default function Recommend(props: Props) {
-  const { bannerList, recommendList} = props;
-  //mock 数据
-  // const bannerList = [1, 2, 3, 4].map((item) => {
-  //   return {
-  //     imageUrl:
-  //       "http://p1.music.126.net/ZYLJ2oZn74yUz5x8NBGkVA==/109951164331219056.jpg",
-  //   };
-  // });
+  const bannerList = useAppSelector((state) => state.recommend.bannerList);
+  const recommendList = useAppSelector(
+    (state) => state.recommend.recommendList
+  );
 
-  // const recommendListJS: RecommendItem[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(
-  //   (item) => {
-  //     return {
-  //       id: item,
-  //       picUrl:
-  //         "https://p1.music.126.net/fhmefjUfMD-8qtj3JKeHbA==/18999560928537533.jpg",
-  //       playCount: 17171122,
-  //       name: "朴树、许巍、Henry-baobao",
-  //     };
-  //   }
-  // );
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (!bannerList.length) {
+      dispatch(getBannerListAsync(0));
+    }
+    if (!recommendList.length) {
+      dispatch(getRecommendListAsync(50));
+    }
+  }, []);
+
   return (
     <Content>
       <Scroll onScroll={forceCheck}>
         <div>
-          <Slider bannerList={bannerList} />
-          <RecommendList recommendList={recommendList} />
+          <Slider bannerList={bannerList as Banner[]} />
+          <RecommendList recommendList={recommendList as RecommendItem[]} />
         </div>
       </Scroll>
     </Content>

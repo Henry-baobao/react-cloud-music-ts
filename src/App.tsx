@@ -6,7 +6,7 @@ import Rank from "./application/Rank";
 import Recommend from "./application/Recommend";
 import Singers from "./application/Singers";
 import { IconStyle } from "./assets/iconfont/iconfont";
-import store from "./store";
+import { store } from "./store";
 import { GlobalStyle } from "./style";
 
 type Props = {};

@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { SliderContainer } from "./style";
 import "swiper/css";
 import "swiper/css/pagination";
 import { Autoplay, Pagination, Scrollbar } from "swiper";
 
-type Banner = {
+export interface Banner {
   imageUrl: string;
-};
+}
 
 type Props = {
   bannerList: Banner[];

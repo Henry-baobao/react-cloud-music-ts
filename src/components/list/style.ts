@@ -16,13 +16,16 @@ export const List = styled.div`
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: space-around;
+  /* justify-content: space-around; */
 `;
 
 export const ListItem = styled.div`
   width: 32%;
   .img_wrapper {
     position: relative;
+    //通过height和padding-bottom属性进行图片占位
+    height: 0;
+    padding-bottom: 100%;
     .decorate {
       position: absolute;
       top: 0;
@@ -54,5 +57,9 @@ export const ListItem = styled.div`
     line-height: 1.4;
     font-size: ${style["font-size-s"]};
     color: ${style["font-color-desc"]};
+  }
+
+  &:not(:nth-child(3n)) {
+    margin-right: calc(4% / 3);
   }
 `;

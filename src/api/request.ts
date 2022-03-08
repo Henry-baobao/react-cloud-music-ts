@@ -1,9 +1,19 @@
 import { axiosInstance } from "./config";
 
-export const getBannerRequest = () => {
-  return axiosInstance.get("/banner");
+type BannerResponse = {
+  banners: object[];
 };
 
-export const getRecommendListRequest = () => {
-  return axiosInstance.get("/personalized");
+type RecommendResponse = {
+  result: object[];
+};
+
+export const getBannerRequest = (type: number = 0) => {
+  return axiosInstance.get<never, BannerResponse>(`/banner?type=${type}`);
+};
+
+export const getRecommendListRequest = (limit: number = 30) => {
+  return axiosInstance.get<never, RecommendResponse>(
+    `/personalized?limit=${limit}`
+  );
 };
