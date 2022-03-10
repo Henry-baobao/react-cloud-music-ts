@@ -6,6 +6,7 @@ import { forceCheck } from "react-lazyload";
 import Scroll from "../../baseUI/scroll";
 import { getBannerListAsync, getRecommendListAsync } from "./store/slice";
 import { useAppDispatch, useAppSelector } from "../../hooks";
+import LoadingV2 from "../../baseUI/loadingV2";
 
 type Props = {};
 
@@ -14,6 +15,7 @@ export default function Recommend(props: Props) {
   const recommendList = useAppSelector(
     (state) => state.recommend.recommendList
   );
+  const loading = useAppSelector((state) => state.recommend.loading);
 
   const dispatch = useAppDispatch();
 
@@ -34,6 +36,7 @@ export default function Recommend(props: Props) {
           <RecommendList recommendList={recommendList as RecommendItem[]} />
         </div>
       </Scroll>
+      {loading ? <LoadingV2 /> : <></>}
     </Content>
   );
 }

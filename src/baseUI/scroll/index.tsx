@@ -5,10 +5,14 @@ import React, {
   ReactNode,
   useEffect,
   useImperativeHandle,
+  useMemo,
   useRef,
   useState,
 } from "react";
 import styled from "styled-components";
+import { debounce } from "../../api/utils";
+import Loading from "../loading";
+import LoadingV2 from "../loadingV2";
 
 type Direction = "vertical" | "horizontal";
 
@@ -37,12 +41,50 @@ const ScrollContainer = styled.div`
   overflow: hidden;
 `;
 
+const PullUpLoading = styled.div`
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 5px;
+  width: 60px;
+  height: 60px;
+  margin: auto;
+  z-index: 100;
+`;
+
+const PullDownLoading = styled.div`
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0px;
+  height: 30px;
+  margin: auto;
+  z-index: 100;
+`;
+
 const Scroll = forwardRef<IScrollRef, Partial<Props>>((props, ref) => {
-  const { direction, click, refresh, bounceTop, bounceBottom } = props;
+  const {
+    direction,
+    click,
+    refresh,
+    bounceTop,
+    bounceBottom,
+    pullUpLoading,
+    pullDownLoading,
+  } = props;
   const { pullUp, pullDown, onScroll } = props;
 
   const [bScroll, setBScroll] = useState<BScrollConstructor | null>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  const pullUpDebounce = useMemo(() => {
+    return debounce(pullUp!, 1000);
+  }, [pullUp]);
+
+  const pullDownDebounce = useMemo(() => {
+    return debounce(pullDown!, 1000);
+  }, [pullDown]);
+
   useEffect(() => {
     const scroll = new BScroll(scrollContainerRef.current!, {
       scrollX: direction === "horizontal",
@@ -64,39 +106,38 @@ const Scroll = forwardRef<IScrollRef, Partial<Props>>((props, ref) => {
 
   useEffect(() => {
     if (!bScroll || !onScroll) return;
-    bScroll.on("scroll", (scroll: any) => {
-      onScroll(scroll);
-    });
+    bScroll.on("scroll", onScroll);
     return () => {
-      bScroll.off("scroll");
+      bScroll.off("scroll", onScroll);
     };
   }, [onScroll, bScroll]);
 
   useEffect(() => {
     if (!bScroll || !pullUp) return;
-    bScroll.on("scrollEnd", () => {
+    const handlePullUp = () => {
       if (bScroll.y <= bScroll.maxScrollY + 100) {
-        pullUp();
+        pullUpDebounce();
       }
-    });
-    return () => {
-      bScroll.off("scrollEnd");
     };
-  }, [pullUp, bScroll]);
+    bScroll.on("scrollEnd", handlePullUp);
+    return () => {
+      bScroll.off("scrollEnd", handlePullUp);
+    };
+  }, [pullUp, bScroll, pullUpDebounce]);
 
   useEffect(() => {
     if (!bScroll || !pullDown) return;
-    bScroll.on("touchEnd", (pos: any) => {
-      console.log("touch end position: ", pos);
+    const handlePullDown = (pos: any) => {
       //判断用户的下拉动作
       if (pos.y > 50) {
-        pullDown();
+        pullDownDebounce();
       }
-    });
-    return () => {
-      bScroll.off("touchEnd");
     };
-  }, [pullDown, bScroll]);
+    bScroll.on("touchEnd", handlePullDown);
+    return () => {
+      bScroll.off("touchEnd", handlePullDown);
+    };
+  }, [pullDown, bScroll, pullDownDebounce]);
 
   useEffect(() => {
     if (refresh && bScroll) {
@@ -118,8 +159,25 @@ const Scroll = forwardRef<IScrollRef, Partial<Props>>((props, ref) => {
     },
   }));
 
+  const PullUpDisplayStyle = pullUpLoading
+    ? { display: "" }
+    : { display: "none" };
+  const PullDownDisplayStyle = pullDownLoading
+    ? { display: "" }
+    : { display: "none" };
+
   return (
-    <ScrollContainer ref={scrollContainerRef}>{props.children}</ScrollContainer>
+    <ScrollContainer ref={scrollContainerRef}>
+      {props.children}
+      {/* 滑到底部加载动画 */}
+      <PullUpLoading style={PullUpDisplayStyle}>
+        <Loading></Loading>
+      </PullUpLoading>
+      {/* 顶部下拉刷新动画 */}
+      <PullDownLoading style={PullDownDisplayStyle}>
+        <LoadingV2></LoadingV2>
+      </PullDownLoading>
+    </ScrollContainer>
   );
 });
 

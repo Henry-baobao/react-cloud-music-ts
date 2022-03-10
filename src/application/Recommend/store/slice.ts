@@ -1,6 +1,5 @@
 import { AppDispatch } from "./../../../store/index";
 import { createSlice, current, PayloadAction } from "@reduxjs/toolkit";
-import { Reducer } from "react";
 import {
   getBannerRequest,
   getRecommendListRequest,
@@ -9,17 +8,20 @@ import {
 type RecommendState = {
   bannerList: object[];
   recommendList: object[];
+  loading: boolean;
 };
 
 type RecommendReducer = {
   saveBannerList: (state: RecommendState, action: PayloadAction<any>) => void;
   saveRecomendList: (state: RecommendState, action: PayloadAction<any>) => void;
+  saveLoading: (state: RecommendState, action: PayloadAction<boolean>) => void;
   //   save: Reducer<RecommendState, PayloadAction<any>>;
 };
 
 const recommendSlice = createSlice<RecommendState, RecommendReducer>({
   name: "recommend",
   initialState: {
+    loading: true,
     bannerList: [],
     recommendList: [],
   },
@@ -34,13 +36,18 @@ const recommendSlice = createSlice<RecommendState, RecommendReducer>({
     //   state.recommendList = res.result;
     // },
     saveBannerList: (state, action) => {
-      console.log("save banner state: ", current(state), action);
       state.bannerList = action.payload;
+      console.log("save banner state: ", current(state), action);
     },
 
     saveRecomendList: (state, action) => {
-      console.log("save recommend state: ", state, action);
       state.recommendList = action.payload;
+      console.log("save recommend state: ", current(state), action);
+    },
+
+    saveLoading: (state, action) => {
+      state.loading = action.payload;
+      console.log("save loading state: ", current(state), action);
     },
   },
 });
@@ -60,11 +67,13 @@ export const getRecommendListAsync =
     try {
       const res = await getRecommendListRequest(payload);
       dispatch(saveRecomendList(res.result));
+      dispatch(saveLoading(false));
     } catch (error) {
       console.log("获取推荐歌单列表失败，请查看接口请求是否正常");
     }
   };
 
-export const { saveBannerList, saveRecomendList } = recommendSlice.actions;
+export const { saveBannerList, saveRecomendList, saveLoading } =
+  recommendSlice.actions;
 
 export default recommendSlice.reducer;
