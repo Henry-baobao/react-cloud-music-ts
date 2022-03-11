@@ -12,6 +12,10 @@ type HotSingerResponse = {
   artists: object[];
 };
 
+type TopRankResponse = {
+  list: object[];
+};
+
 export const getBannerRequest = (type: number = 0) => {
   return axiosInstance.get<never, BannerResponse>(`/banner?type=${type}`);
 };
@@ -37,4 +41,8 @@ export const getSingersRequest = (
   return axiosInstance.get<never, HotSingerResponse>(
     `/artist/list?type=${type}&area=${area}&initial=${initial}&offset=${offset}`
   );
+};
+
+export const getRankListRequest = () => {
+  return axiosInstance.get<never, TopRankResponse>(`/toplist/detail`);
 };

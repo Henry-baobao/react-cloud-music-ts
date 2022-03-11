@@ -1,7 +1,6 @@
 import {
   createAsyncThunk,
   createSlice,
-  current,
   PayloadAction,
 } from "@reduxjs/toolkit";
 import { getHotSingersRequest, getSingersRequest } from "../../../api/request";
@@ -77,12 +76,12 @@ const singerSlice = createSlice<SingerState, SingerReducer>({
   extraReducers: (builder) => {
     builder
       .addCase(getSingersAsync.pending, (state, action) => {
-        console.log("get singer request: pending");
+        //console.log("get singer request: pending");
         state.loading = true;
         state.listOffset = 0;
       })
       .addCase(getSingersAsync.fulfilled, (state, action) => {
-        console.log("get singer request: fulfilled");
+        //console.log("get singer request: fulfilled");
         state.singerList = action.payload;
         state.listOffset = action.payload.length;
         state.loading = false;
@@ -94,12 +93,12 @@ const singerSlice = createSlice<SingerState, SingerReducer>({
         state.pullDownLoading = false;
       })
       .addCase(getHotSingersAsync.pending, (state, action) => {
-        console.log("get hot singer request: pending");
+        //console.log("get hot singer request: pending");
         state.loading = true;
         state.listOffset = 0;
       })
       .addCase(getHotSingersAsync.fulfilled, (state, action) => {
-        console.log("get hot singer request: fulfilled");
+        //console.log("get hot singer request: fulfilled");
         state.singerList = action.payload;
         state.listOffset = action.payload.length;
         state.loading = false;
@@ -111,11 +110,11 @@ const singerSlice = createSlice<SingerState, SingerReducer>({
         state.pullDownLoading = false;
       })
       .addCase(refreshHotSingersAsync.pending, (state, action) => {
-        console.log("refresh hot singer request: pending");
+        //console.log("refresh hot singer request: pending");
         state.pullUpLoading = true;
       })
       .addCase(refreshHotSingersAsync.fulfilled, (state, action) => {
-        console.log("refresh hot singer request: fulfilled");
+        //console.log("refresh hot singer request: fulfilled");
         const data = [...state.singerList, ...action.payload];
         state.singerList = data;
         state.listOffset = data.length;
@@ -126,7 +125,7 @@ const singerSlice = createSlice<SingerState, SingerReducer>({
         state.pullUpLoading = false;
       })
       .addCase(refreshSingersAsync.pending, (state, action) => {
-        console.log("refresh singer request: pending");
+        //console.log("refresh singer request: pending");
         state.pullUpLoading = true;
       })
       .addCase(refreshSingersAsync.fulfilled, (state, action) => {
@@ -134,7 +133,7 @@ const singerSlice = createSlice<SingerState, SingerReducer>({
         state.singerList = data;
         state.listOffset = data.length;
         state.pullUpLoading = false;
-        console.log("refresh singer request: fulfilled: ", current(state));
+        //console.log("refresh singer request: fulfilled: ", current(state));
       })
       .addCase(refreshSingersAsync.rejected, (state, action) => {
         console.log("获取更多分类歌手列表失败");
@@ -147,7 +146,7 @@ export const getHotSingersAsync = createAsyncThunk<object[], void>(
   "singer/getHotSingersAsync",
   async (payload, thunkApi) => {
     const appState = thunkApi.getState() as RootState;
-    console.log("--------------getHotSingersAsync: ", appState.singer);
+    //console.log("--------------getHotSingersAsync: ", appState.singer);
     const { listOffset } = appState.singer;
     const res = await getHotSingersRequest(listOffset);
     return res.artists;
@@ -158,7 +157,7 @@ export const getSingersAsync = createAsyncThunk(
   "singer/getSingersAsync",
   async (payload, thunkApi) => {
     const appState = thunkApi.getState() as RootState;
-    console.log("--------------getSingersAsync: ", appState.singer);
+    //console.log("--------------getSingersAsync: ", appState.singer);
     const { type, area, initial, listOffset } = appState.singer;
     const res = await getSingersRequest(type, area, initial, listOffset);
     return res.artists;
@@ -169,7 +168,7 @@ export const refreshHotSingersAsync = createAsyncThunk<object[], void>(
   "singer/refreshHotSingersAsync",
   async (payload, thunkApi) => {
     const appState = thunkApi.getState() as RootState;
-    console.log("--------------refreshHotSingersAsync: ", appState.singer);
+    //console.log("--------------refreshHotSingersAsync: ", appState.singer);
     const { listOffset } = appState.singer;
     const res = await getHotSingersRequest(listOffset);
     return res.artists;
@@ -180,7 +179,7 @@ export const refreshSingersAsync = createAsyncThunk<object[], void>(
   "singer/refreshSingersAsync",
   async (payload, thunkApi) => {
     const appState = thunkApi.getState() as RootState;
-    console.log("--------------refreshSingersAsync: ", appState.singer);
+    //console.log("--------------refreshSingersAsync: ", appState.singer);
     const { type, area, initial, listOffset } = appState.singer;
     const res = await getSingersRequest(type, area, initial, listOffset);
     return res.artists;
