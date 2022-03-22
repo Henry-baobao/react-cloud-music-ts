@@ -16,6 +16,10 @@ type TopRankResponse = {
   list: object[];
 };
 
+type AlbumDetailResponse = {
+  playlist: object;
+};
+
 export const getBannerRequest = (type: number = 0) => {
   return axiosInstance.get<never, BannerResponse>(`/banner?type=${type}`);
 };
@@ -45,4 +49,10 @@ export const getSingersRequest = (
 
 export const getRankListRequest = () => {
   return axiosInstance.get<never, TopRankResponse>(`/toplist/detail`);
+};
+
+export const getAlbumDetailRequest = (id: string) => {
+  return axiosInstance.get<never, AlbumDetailResponse>(
+    `/playlist/detail?id=${id}`
+  );
 };

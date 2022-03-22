@@ -1,6 +1,6 @@
 import React from "react";
 import { NavLink, Outlet } from "react-router-dom";
-import { Tab, TabItem, Top } from "./styles";
+import { Tab, TabItem, Top } from "./style";
 
 type Props = {};
 

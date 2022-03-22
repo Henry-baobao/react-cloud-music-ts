@@ -1,5 +1,6 @@
 import React from "react";
 import LazyLoad from "react-lazyload";
+import { useNavigate } from "react-router";
 import { getCount } from "../../api/utils";
 import { List, ListItem, ListWrapper } from "./style";
 
@@ -16,12 +17,18 @@ type Props = {
 
 function RecommendList(props: Props): JSX.Element {
   const { recommendList } = props;
+
+  const navigate = useNavigate();
+
+  const clickHandler = (id: number) => {
+    navigate(`/recommend/${id}`);
+  };
   return (
     <ListWrapper>
       <h1 className="title">推荐歌单</h1>
       <List>
         {recommendList.map((item) => (
-          <ListItem key={item.id}>
+          <ListItem key={item.id} onClick={() => clickHandler(item.id)}>
             <div className="img_wrapper">
               <div className="decorate"></div>
               <LazyLoad

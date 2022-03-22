@@ -7,6 +7,7 @@ import Scroll from "../../baseUI/scroll";
 import { getBannerListAsync, getRecommendListAsync } from "./store/slice";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import LoadingV2 from "../../baseUI/loadingV2";
+import { Outlet } from "react-router";
 
 type Props = {};
 
@@ -37,6 +38,7 @@ export default function Recommend(props: Props) {
         </div>
       </Scroll>
       {loading ? <LoadingV2 /> : <></>}
+      <Outlet />
     </Content>
   );
 }

@@ -1,6 +1,7 @@
 import React from "react";
 import { Provider } from "react-redux";
 import { Navigate, useRoutes } from "react-router-dom";
+import Album from "./application/Album";
 import Home from "./application/Home";
 import Rank from "./application/Rank";
 import Recommend from "./application/Recommend";
@@ -24,6 +25,12 @@ const App: React.FC<Props> = (props) => {
         {
           path: "recommend",
           element: <Recommend />,
+          children: [
+            {
+              path: ":id",
+              element: <Album />,
+            },
+          ],
         },
         {
           path: "singers",
@@ -32,20 +39,14 @@ const App: React.FC<Props> = (props) => {
         {
           path: "rank",
           element: <Rank />,
+          children: [
+            {
+              path: ":id",
+              element: <Album />,
+            },
+          ],
         },
       ],
-    },
-    {
-      path: "/test/recommend",
-      element: <Recommend />,
-    },
-    {
-      path: "/test/singers",
-      element: <Singers />,
-    },
-    {
-      path: "/test/rank",
-      element: <Rank />,
     },
   ]);
 

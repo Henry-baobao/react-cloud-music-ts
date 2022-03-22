@@ -32,3 +32,17 @@ export const filterIndex = (rankList: IRankListProps[]) => {
   }
   return rankList.length;
 };
+
+//处理歌手列表拼接歌手名字
+export const getName = (list: any[]) => {
+  let str = "";
+  list.map((item, index) => {
+    str += index === 0 ? item.name : "/" + item.name;
+    return item;
+  });
+  return str;
+};
+
+//判断一个对象是否为空对象
+export const isEmptyObject = (obj: object) =>
+  !obj || Object.keys(obj).length === 0;

@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { useNavigate } from "react-router";
 import { filterIndex } from "../../api/utils";
 import LoadingV2 from "../../baseUI/loadingV2";
 import Scroll from "../../baseUI/scroll";
@@ -15,6 +16,7 @@ type SongProps = {
 };
 
 export interface IRankListProps {
+  id: string;
   coverImgId: number;
   coverImgUrl: string;
   updateFrequency: string;
@@ -25,10 +27,16 @@ const Rank = (props: Props) => {
   const rank = useAppSelector((state) => state.rank);
   const { rankList, loading } = rank;
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(getRankListAsync());
   }, [dispatch]);
+
+  const enterDetail = (item: IRankListProps) => {
+    console.log("navigate to: ", item.id);
+    navigate(`/rank/${item.id}`);
+  };
 
   const renderSongList = (list: SongProps[] | undefined) => {
     return list?.length ? (
@@ -51,7 +59,11 @@ const Rank = (props: Props) => {
     return (
       <List globalRank={isGlobal}>
         {list?.map((item, index) => (
-          <ListItem globalRank={isGlobal} key={`${item.coverImgId}${index}`}>
+          <ListItem
+            globalRank={isGlobal}
+            key={`${item.coverImgId}${index}`}
+            onClick={() => enterDetail(item)}
+          >
             <div className="img_wrapper">
               <img src={item.coverImgUrl} alt="type" />
               <div className="decorate"></div>
