@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useNavigate } from "react-router";
+import { Outlet, useNavigate } from "react-router-dom";
 import { filterIndex } from "../../api/utils";
 import LoadingV2 from "../../baseUI/loadingV2";
 import Scroll from "../../baseUI/scroll";
@@ -34,7 +34,6 @@ const Rank = (props: Props) => {
   }, [dispatch]);
 
   const enterDetail = (item: IRankListProps) => {
-    console.log("navigate to: ", item.id);
     navigate(`/rank/${item.id}`);
   };
 
@@ -100,6 +99,7 @@ const Rank = (props: Props) => {
           ) : null}
         </div>
       </Scroll>
+      <Outlet />
     </Container>
   );
 };

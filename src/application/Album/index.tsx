@@ -58,12 +58,12 @@ function Album(props: Props) {
     setShowStatus(false);
   }, []);
 
-  console.log("-------------------------", currentAlbum);
   return (
     <CSSTransition
       in={showStatus}
       timeout={500}
       classNames="fly"
+      appear={true}
       unmountOnExit
       onExited={() => navigate(-1)}
     >
